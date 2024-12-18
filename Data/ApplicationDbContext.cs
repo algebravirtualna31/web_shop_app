@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using web_shop_app.Models;
 
 namespace web_shop_app.Data
 {
@@ -24,5 +25,15 @@ namespace web_shop_app.Data
             : base(options)
         {
         }
+
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<ProductCategory> ProductCategories { get; set; }
+
+        public DbSet<OrderItem> OrderItems { get; set; }
     }
 }

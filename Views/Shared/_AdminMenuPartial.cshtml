@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using web_shop_app.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result,"admin"))
+{
+    <li class="nav-item">
+        <div class="dropdown">
+            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Admin</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
+                <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a>
+                <a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">Orders</a>
+            </div>
+        </div>
+    </li>
+}

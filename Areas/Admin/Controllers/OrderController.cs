@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using web_shop_app.Data;
 using web_shop_app.Models;
@@ -6,6 +8,7 @@ using web_shop_app.Models;
 namespace web_shop_app.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -42,6 +45,14 @@ namespace web_shop_app.Areas.Admin.Controllers
         // GET: Admin/Order/Create
         public IActionResult Create()
         {
+            ViewBag.Users = _context.Users.Select(
+                 user => new SelectListItem
+                 {
+                     Value = user.Id.ToString(),
+                     Text = user.FirstName + " " + user.LastName,
+                 }
+             ).ToList();
+
             return View();
         }
 
@@ -52,13 +63,19 @@ namespace web_shop_app.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,DateCreated,Total,BillingFirstName,BillingLastName,BillingEmail,BillingPhone,BillingAddress,BillingCity,BillingCountry,BillingZip,Message,UserId")] Order order)
         {
-            if (ModelState.IsValid)
+            try
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            catch (Exception)
+            {
+
+                return View(order);
+            }
+              
+       
         }
 
         // GET: Admin/Order/Edit/5
@@ -70,6 +87,9 @@ namespace web_shop_app.Areas.Admin.Controllers
             }
 
             var order = await _context.Orders.FindAsync(id);
+            var userOnOrder = await _context.Users.FirstOrDefaultAsync(user => user.Id == order.UserId);
+            ViewBag.User = userOnOrder.FirstName + " " + userOnOrder.LastName;  
+
             if (order == null)
             {
                 return NotFound();
@@ -89,27 +109,26 @@ namespace web_shop_app.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+
+            try
             {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(order);
+                await _context.SaveChangesAsync();
+
             }
-            return View(order);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderExists(order.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(order);
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Admin/Order/Delete/5

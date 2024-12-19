@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 using web_shop_app.Data;
 
 internal class Program
@@ -18,9 +20,6 @@ internal class Program
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
         builder.Services.AddControllersWithViews();
-;
-
-
 
         var app = builder.Build();
 
@@ -38,6 +37,24 @@ internal class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
+        var defaultDateCulture = "de-De";
+        var cultureInfo = new CultureInfo(defaultDateCulture);
+        cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+        cultureInfo.NumberFormat.CurrencyDecimalSeparator = ".";
+
+        app.UseRequestLocalization(new RequestLocalizationOptions
+        {
+            DefaultRequestCulture = new RequestCulture(cultureInfo),
+            SupportedCultures = new List<CultureInfo>
+            {
+                cultureInfo,
+            },
+            SupportedUICultures = new List<CultureInfo>
+            {
+                cultureInfo,
+            }
+        });
 
         app.UseRouting();
 

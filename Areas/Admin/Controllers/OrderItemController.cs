@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using web_shop_app.Models;
 namespace web_shop_app.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class OrderItemController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -57,13 +59,18 @@ namespace web_shop_app.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,OrderId,ProductId,Quantity,Total")] OrderItem orderItem)
         {
-            if (ModelState.IsValid)
+            try
             {
                 _context.Add(orderItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(orderItem);
+            catch (Exception)
+            {
+
+                return View(orderItem);
+            }
+          
         }
 
         // GET: Admin/OrderItem/Edit/5
@@ -94,27 +101,23 @@ namespace web_shop_app.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(orderItem);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderItemExists(orderItem.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(orderItem);
+                await _context.SaveChangesAsync();
             }
-            return View(orderItem);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderItemExists(orderItem.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(orderItem);
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Admin/OrderItem/Delete/5

@@ -63,7 +63,7 @@ namespace web_shop_app.Areas.Admin.Controllers
             catch (Exception)
             {
 
-                throw;
+                return View(category);
             }
                
             
@@ -96,8 +96,6 @@ namespace web_shop_app.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
-     
                 try
                 {
                     _context.Update(category);

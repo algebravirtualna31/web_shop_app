@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using web_shop_app.Models;
 namespace web_shop_app.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class ProductCategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -57,13 +59,18 @@ namespace web_shop_app.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CategoryId,ProductId")] ProductCategory productCategory)
         {
-            if (ModelState.IsValid)
+            try
             {
                 _context.Add(productCategory);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(productCategory);
+            catch (Exception)
+            {
+
+                return View(productCategory);
+            }
+
         }
 
         // GET: Admin/ProductCategories/Edit/5
@@ -94,27 +101,24 @@ namespace web_shop_app.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(productCategory);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductCategoryExists(productCategory.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(productCategory);
+                await _context.SaveChangesAsync();
             }
-            return View(productCategory);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProductCategoryExists(productCategory.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(productCategory);
+                }
+            }
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: Admin/ProductCategories/Delete/5

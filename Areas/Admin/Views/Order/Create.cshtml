@@ -1,4 +1,4 @@
-﻿@model web_shop_app.Models.Order
+﻿@model web_shop_app.ViewModels.OrderViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -21,44 +21,44 @@
                 <span asp-validation-for="Total" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BillingFirstName" class="control-label"></label>
-                <input asp-for="BillingFirstName" class="form-control" />
-                <span asp-validation-for="BillingFirstName" class="text-danger"></span>
+                <label asp-for="OrderAddress.BillingFirstName" class="control-label"></label>
+                <input asp-for="OrderAddress.BillingFirstName" class="form-control" />
+                <span asp-validation-for="OrderAddress.BillingFirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BillingLastName" class="control-label"></label>
-                <input asp-for="BillingLastName" class="form-control" />
-                <span asp-validation-for="BillingLastName" class="text-danger"></span>
+                <label asp-for="OrderAddress.BillingLastName" class="control-label"></label>
+                <input asp-for="OrderAddress.BillingLastName" class="form-control" />
+                <span asp-validation-for="OrderAddress.BillingLastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BillingEmail" class="control-label"></label>
-                <input asp-for="BillingEmail" class="form-control" />
-                <span asp-validation-for="BillingEmail" class="text-danger"></span>
+                <label asp-for="OrderAddress.BillingEmail" class="control-label"></label>
+                <input asp-for="OrderAddress.BillingEmail" class="form-control" />
+                <span asp-validation-for="OrderAddress.BillingEmail" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BillingPhone" class="control-label"></label>
-                <input asp-for="BillingPhone" class="form-control" />
-                <span asp-validation-for="BillingPhone" class="text-danger"></span>
+                <label asp-for="OrderAddress.BillingPhone" class="control-label"></label>
+                <input asp-for="OrderAddress.BillingPhone" class="form-control" />
+                <span asp-validation-for="OrderAddress.BillingPhone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BillingAddress" class="control-label"></label>
-                <input asp-for="BillingAddress" class="form-control" />
-                <span asp-validation-for="BillingAddress" class="text-danger"></span>
+                <label asp-for="OrderAddress.BillingAddress" class="control-label"></label>
+                <input asp-for="OrderAddress.BillingAddress" class="form-control" />
+                <span asp-validation-for="OrderAddress.BillingAddress" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BillingCity" class="control-label"></label>
-                <input asp-for="BillingCity" class="form-control" />
-                <span asp-validation-for="BillingCity" class="text-danger"></span>
+                <label asp-for="OrderAddress.BillingCity" class="control-label"></label>
+                <input asp-for="OrderAddress.BillingCity" class="form-control" />
+                <span asp-validation-for="OrderAddress.BillingCity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BillingCountry" class="control-label"></label>
-                <input asp-for="BillingCountry" class="form-control" />
-                <span asp-validation-for="BillingCountry" class="text-danger"></span>
+                <label asp-for="OrderAddress.BillingCountry" class="control-label"></label>
+                <input asp-for="OrderAddress.BillingCountry" class="form-control" />
+                <span asp-validation-for="OrderAddress.BillingCountry" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BillingZip" class="control-label"></label>
-                <input asp-for="BillingZip" class="form-control" />
-                <span asp-validation-for="BillingZip" class="text-danger"></span>
+                <label asp-for="OrderAddress.BillingZip" class="control-label"></label>
+                <input asp-for="OrderAddress.BillingZip" class="form-control" />
+                <span asp-validation-for="OrderAddress.BillingZip" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Message" class="control-label"></label>

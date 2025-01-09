@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using web_shop_app.Data;
 using web_shop_app.Models;
+using web_shop_app.ViewModels;
 
 namespace web_shop_app.Areas.Admin.Controllers
 {
@@ -61,18 +62,24 @@ namespace web_shop_app.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DateCreated,Total,BillingFirstName,BillingLastName,BillingEmail,BillingPhone,BillingAddress,BillingCity,BillingCountry,BillingZip,Message,UserId")] Order order)
+        public async Task<IActionResult> Create(OrderViewModel orderViewModel)
         {
             try
             {
+                var order = new Order()
+                {
+                    BillingAddress = orderViewModel.OrderAddress.BillingAddress
+                    //.......
+                };
+
+
                 _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception)
             {
-
-                return View(order);
+                return View(orderViewModel);
             }
               
        

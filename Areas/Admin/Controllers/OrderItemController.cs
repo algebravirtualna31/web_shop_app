@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -47,8 +43,18 @@ namespace web_shop_app.Areas.Admin.Controllers
         }
 
         // GET: Admin/OrderItem/Create
-        public IActionResult Create()
+        public IActionResult Create(int orderId)
         {
+            ViewBag.OrderId = orderId;  
+
+            ViewBag.Products = _context.Products.Select(
+            product => new SelectListItem
+            {
+                Value = product.Id.ToString(),
+                Text = product.Title
+
+            }).ToList();
+
             return View();
         }
 
@@ -57,10 +63,21 @@ namespace web_shop_app.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OrderId,ProductId,Quantity,Total")] OrderItem orderItem)
+        public async Task<IActionResult> Create( OrderItem orderItem)
         {
             try
             {
+                var productDetails = _context.Products
+                    .Where(p => p.Id == orderItem.ProductId)
+                    .SingleOrDefault();
+
+                if (productDetails == null){ 
+
+                    return NotFound();
+                }
+
+                orderItem.Total = orderItem.Quantity * productDetails.Price;
+
                 _context.Add(orderItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

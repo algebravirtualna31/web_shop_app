@@ -35,10 +35,27 @@ namespace web_shop_app.Areas.Admin.Controllers
 
             var order = await _context.Orders
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (order == null)
             {
                 return NotFound();
             }
+
+            order.OrderItems = (
+                from orderItem in _context.OrderItems
+                where orderItem.OrderId == order.Id
+                select new OrderItem
+                {
+                    Id = orderItem.OrderId,
+                    OrderId = orderItem.OrderId,
+                    ProductId = orderItem.ProductId,
+                    Quantity = orderItem.Quantity,
+                    Total = orderItem.Total,
+                    ProductTitle = (from product in _context.Products where product.Id == orderItem.ProductId select product.Title).FirstOrDefault()
+                }
+               ).ToList();
+
+            
 
             return View(order);
         }
@@ -67,15 +84,25 @@ namespace web_shop_app.Areas.Admin.Controllers
             try
             {
                 var order = new Order()
-                {
-                    BillingAddress = orderViewModel.OrderAddress.BillingAddress
-                    //.......
+                {   
+                    Message = orderViewModel.Message,
+                    UserId = orderViewModel.UserId,
+                    Total = orderViewModel.Total,
+                    BillingAddress = orderViewModel.OrderAddress.BillingAddress,
+                    BillingCity = orderViewModel.OrderAddress.BillingCity,
+                    BillingEmail = orderViewModel.OrderAddress.BillingEmail,
+                    BillingCountry = orderViewModel.OrderAddress.BillingCountry,
+                    BillingFirstName = orderViewModel.OrderAddress.BillingFirstName,
+                    BillingLastName = orderViewModel.OrderAddress.BillingLastName,
+                    BillingPhone = orderViewModel.OrderAddress.BillingPhone,
+                    BillingZip = orderViewModel.OrderAddress.BillingZip
                 };
 
 
                 _context.Add(order);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("Create","OrderItem", new {orderId = order.Id});
             }
             catch (Exception)
             {
@@ -95,13 +122,34 @@ namespace web_shop_app.Areas.Admin.Controllers
 
             var order = await _context.Orders.FindAsync(id);
             var userOnOrder = await _context.Users.FirstOrDefaultAsync(user => user.Id == order.UserId);
+
+            var orderViewModel = new OrderViewModel()
+            {
+                Id = order.Id,
+                Total = order.Total,
+                UserId = order.UserId,
+                DateCreated = order.DateCreated,
+                Message = order.Message,
+                OrderAddress = new OrderAddress()
+                {
+                    BillingAddress = order.BillingAddress,
+                    BillingCity = order.BillingCity,
+                    BillingCountry = order.BillingCountry,
+                    BillingZip = order.BillingZip,
+                    BillingEmail = order.BillingEmail,
+                    BillingPhone = order.BillingPhone,
+                    BillingFirstName = order.BillingFirstName,
+                    BillingLastName = order.BillingLastName
+                }
+            };
+
             ViewBag.User = userOnOrder.FirstName + " " + userOnOrder.LastName;  
 
             if (order == null)
             {
                 return NotFound();
             }
-            return View(order);
+            return View(orderViewModel);
         }
 
         // POST: Admin/Order/Edit/5
@@ -109,23 +157,41 @@ namespace web_shop_app.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DateCreated,Total,BillingFirstName,BillingLastName,BillingEmail,BillingPhone,BillingAddress,BillingCity,BillingCountry,BillingZip,Message,UserId")] Order order)
+        public async Task<IActionResult> Edit(int id, OrderViewModel orderViewModel)
         {
-            if (id != order.Id)
+            if (id != orderViewModel.Id)
             {
                 return NotFound();
             }
 
+            Order order = new Order();
 
             try
             {
+                order = _context.Orders.FirstOrDefault(order => order.Id == id);
+
+                if (order == null)
+                {
+                    return NotFound();
+                }
+
+                order.BillingAddress = orderViewModel.OrderAddress.BillingAddress;
+                order.BillingCity = orderViewModel.OrderAddress.BillingCity;
+                order.BillingZip = orderViewModel.OrderAddress.BillingZip;
+                order.BillingCountry = orderViewModel.OrderAddress.BillingCountry;
+                order.BillingPhone = orderViewModel.OrderAddress.BillingPhone;
+                order.BillingEmail = orderViewModel.OrderAddress.BillingEmail;
+                order.BillingLastName = orderViewModel.OrderAddress.BillingLastName;
+                order.BillingFirstName = orderViewModel.OrderAddress.BillingFirstName;
+
+
                 _context.Update(order);
                 await _context.SaveChangesAsync();
 
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!OrderExists(order.Id))
+                if (!OrderExists(id))
                 {
                     return NotFound();
                 }

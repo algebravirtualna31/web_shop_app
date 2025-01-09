@@ -52,7 +52,7 @@ namespace web_shop_app.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Quantity,Price")] Product product)
+        public async Task<IActionResult> Create(Product product)
         {
             try
             {

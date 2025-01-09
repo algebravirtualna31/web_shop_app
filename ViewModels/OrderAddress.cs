@@ -8,7 +8,6 @@ namespace web_shop_app.ViewModels
         [StringLength(50)]
         public string BillingFirstName { get; set; }
 
-
         [Required(ErrorMessage = "Last name is required.")]
         [StringLength(50)]
         public string BillingLastName { get; set; }

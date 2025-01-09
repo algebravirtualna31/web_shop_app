@@ -21,7 +21,6 @@ namespace web_shop_app.Models
         [StringLength(50)]
         public string BillingFirstName { get; set; }
 
-
         [StringLength(50)]
         public string BillingLastName { get; set; }
 
@@ -42,7 +41,7 @@ namespace web_shop_app.Models
 
         [StringLength(20)]
         public string BillingZip { get; set; }
-
+       
         public string Message { get; set; }
 
         public string UserId { get; set; }

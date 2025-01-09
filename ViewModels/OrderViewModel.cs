@@ -5,6 +5,8 @@ namespace web_shop_app.ViewModels
 {
     public class OrderViewModel
     {
+        public int Id { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateCreated { get; set; }
 

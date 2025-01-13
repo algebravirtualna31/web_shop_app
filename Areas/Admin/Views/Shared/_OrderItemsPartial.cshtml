@@ -1,2 +1,23 @@
 ﻿@model List<web_shop_app.Models.OrderItem>
 
+<table class="table">
+    <thead>
+        <tr>
+           <th>Product</th>
+           <th>Quantity</th>
+           <th>Total</th>
+           <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+               <td>@Html.DisplayFor(modelItem => item.ProductTitle)</td>
+               <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+               <td>@Html.DisplayFor(modelItem => item.Total)</td>
+               <td><a asp-action="Delete" asp-controller="OrderItem" asp-route-id="@item.Id"> Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -46,7 +46,7 @@ namespace web_shop_app.Areas.Admin.Controllers
                 where orderItem.OrderId == order.Id
                 select new OrderItem
                 {
-                    Id = orderItem.OrderId,
+                    Id = orderItem.Id,
                     OrderId = orderItem.OrderId,
                     ProductId = orderItem.ProductId,
                     Quantity = orderItem.Quantity,
@@ -87,7 +87,6 @@ namespace web_shop_app.Areas.Admin.Controllers
                 {   
                     Message = orderViewModel.Message,
                     UserId = orderViewModel.UserId,
-                    Total = orderViewModel.Total,
                     BillingAddress = orderViewModel.OrderAddress.BillingAddress,
                     BillingCity = orderViewModel.OrderAddress.BillingCity,
                     BillingEmail = orderViewModel.OrderAddress.BillingEmail,
@@ -95,14 +94,14 @@ namespace web_shop_app.Areas.Admin.Controllers
                     BillingFirstName = orderViewModel.OrderAddress.BillingFirstName,
                     BillingLastName = orderViewModel.OrderAddress.BillingLastName,
                     BillingPhone = orderViewModel.OrderAddress.BillingPhone,
-                    BillingZip = orderViewModel.OrderAddress.BillingZip
+                    BillingZip = orderViewModel.OrderAddress.BillingZip,
                 };
 
 
                 _context.Add(order);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Create","OrderItem", new {orderId = order.Id});
+                return RedirectToAction("Details", new {id = order.Id});
             }
             catch (Exception)
             {

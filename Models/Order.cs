@@ -9,6 +9,7 @@ namespace web_shop_app.Models
         public Order()
         {
             DateCreated = DateTime.Now;
+            Total = 0.00M;
         }
 
         public int Id { get; set; }

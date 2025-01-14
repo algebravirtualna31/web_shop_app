@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -46,9 +42,19 @@ namespace web_shop_app.Areas.Admin.Controllers
             return View(productCategory);
         }
 
-        // GET: Admin/ProductCategories/Create
-        public IActionResult Create()
+        // GET: Admin/ProductCategories/AssignCategoryToProduct
+        public IActionResult AssignCategoryToProduct(int productId)
         {
+
+            ViewBag.Categories = _context.Categories.Select(cat =>
+              new SelectListItem
+              {
+                  Value = cat.Id.ToString(),
+                  Text = cat.Title
+              }).ToList();
+
+            ViewBag.ProductId = productId;
+
             return View();
         }
 

@@ -21,6 +21,9 @@ internal class Program
             .AddEntityFrameworkStores<ApplicationDbContext>();
         builder.Services.AddControllersWithViews();
 
+        builder.Services.AddSession();
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -60,6 +63,8 @@ internal class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseSession();
 
         app.UseEndpoints(endpoints =>
         {

@@ -38,7 +38,7 @@
                 </div>
                 <div class="card-footer">
                     <form method="post" asp-controller="Cart" asp-action="AddToCart">
-                        <input type="hidden" name="quantity" value="1" />
+                        <input type="hidden" name="selectedQuantity" value="1" />
                         <input type="hidden" name="productId" value="@item.Id" />
                         <input type="submit" class="btn btn-success btn-sm" value="Add to cart" />
                     </form>

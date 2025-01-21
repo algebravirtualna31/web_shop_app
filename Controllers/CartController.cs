@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using web_shop_app.Data;
 using web_shop_app.Extensions;
 using web_shop_app.Models;
@@ -17,7 +18,14 @@ namespace web_shop_app.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            List<CartItem> cart =
+                HttpContext.Session.GetObjectFromJson<List<CartItem>>(SessionKeyName) ?? new List<CartItem>();
+
+            decimal total = 0;
+
+            ViewBag.TotalPrice = cart.Sum(item => total + item.GetTotal());
+
+            return View(cart);
         }
 
 
@@ -59,6 +67,26 @@ namespace web_shop_app.Controllers
             HttpContext.Session.SetObjectAsJson(SessionKeyName, sessionCartItems);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult RemoveFromCart(int productId)
+        {
+            List<CartItem> sessionCart = HttpContext.Session.GetObjectFromJson<List<CartItem>>(SessionKeyName)
+                ?? new List<CartItem>();
+
+            int productIndex = IsExistingInCart(productId);
+
+            if(productIndex == -1)
+            {
+                return NotFound();
+            }
+
+            sessionCart.RemoveAt(productIndex);
+
+            HttpContext.Session.SetObjectAsJson(SessionKeyName, sessionCart);
+
+            return RedirectToAction(nameof(Index));
+
         }
 
         private int IsExistingInCart(int productId)

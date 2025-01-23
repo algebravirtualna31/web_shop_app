@@ -129,6 +129,8 @@ namespace web_shop_app.Controllers
                 _context.SaveChanges();
             }
 
+            HttpContext.Session.SetObjectAsJson(SessionKeyName, "");
+
             return RedirectToAction("Index", new {message = "Than you for your order! :)" }); 
         }
 

@@ -23,9 +23,11 @@ namespace web_shop_app.Controllers
 
             decimal total = 0;
 
+            ViewBag.Cart = cart;
             ViewBag.TotalPrice = cart.Sum(item => total + item.GetTotal());
+            ViewBag.ShouldShowRemoveAction = true;
 
-            return View(cart);
+            return View();
         }
 
 

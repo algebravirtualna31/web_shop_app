@@ -43,9 +43,9 @@ namespace web_shop_app.Models
         [StringLength(20)]
         public string BillingZip { get; set; }
        
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [ForeignKey("OrderId")]
         public ICollection<OrderItem> OrderItems { get; set; }

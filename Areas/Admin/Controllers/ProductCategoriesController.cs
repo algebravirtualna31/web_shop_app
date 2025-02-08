@@ -69,7 +69,7 @@ namespace web_shop_app.Areas.Admin.Controllers
             {
                 _context.Add(productCategory);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Product");
             }
             catch (Exception)
             {

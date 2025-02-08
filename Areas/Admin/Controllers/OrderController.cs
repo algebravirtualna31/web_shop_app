@@ -142,7 +142,18 @@ namespace web_shop_app.Areas.Admin.Controllers
                 }
             };
 
-            ViewBag.User = userOnOrder.FirstName + " " + userOnOrder.LastName;  
+            string? user = null;
+
+            if (userOnOrder != null)
+            {
+                user = userOnOrder.FirstName + " " + userOnOrder.LastName;
+            }
+            else
+            {
+                user = order.BillingFirstName + " " + order.BillingLastName;
+            }
+
+            ViewBag.User = user;
 
             if (order == null)
             {
